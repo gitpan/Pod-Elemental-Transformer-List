@@ -1,0 +1,12 @@
+Changes
+LICENSE
+MANIFEST
+META.json
+META.yml
+Makefile.PL
+README
+dist.ini
+lib/Pod/Elemental/Transformer/List.pm
+t/equiv-pods.t
+t/release-pod-coverage.t
+t/release-pod-syntax.t
