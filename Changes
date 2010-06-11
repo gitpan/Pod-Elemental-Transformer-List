@@ -1,4 +1,7 @@
 Revision history for Pod-Elemental-Transformer-List
 
+0.101610  2010-06-10 21:47:19 America/New_York
+          Bump required version of Pod::Elemental so that tests pass.
+
 0.093580  2009-12-24 20:57:22 America/New_York
           first release!  already used in limited cases privately

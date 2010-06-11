@@ -1,5 +1,7 @@
 package Pod::Elemental::Transformer::List;
-our $VERSION = '0.093580';
+BEGIN {
+  $Pod::Elemental::Transformer::List::VERSION = '0.101610';
+}
 use Moose;
 with 'Pod::Elemental::Transformer';
 # ABSTRACT: transform :list regions into =over/=back to save typing
@@ -162,7 +164,7 @@ Pod::Elemental::Transformer::List - transform :list regions into =over/=back to 
 
 =head1 VERSION
 
-version 0.093580
+version 0.101610
 
 =head1 SYNOPSIS
 
@@ -324,7 +326,7 @@ The inner list, above, could have been written as a compact "for" region.
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2009 by Ricardo SIGNES.
+This software is copyright (c) 2010 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
