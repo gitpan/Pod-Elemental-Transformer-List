@@ -1,8 +1,9 @@
 package Pod::Elemental::Transformer::List;
 BEGIN {
-  $Pod::Elemental::Transformer::List::VERSION = '0.101610';
+  $Pod::Elemental::Transformer::List::VERSION = '0.101620';
 }
 use Moose;
+use Pod::Elemental::Transformer 0.101620;
 with 'Pod::Elemental::Transformer';
 # ABSTRACT: transform :list regions into =over/=back to save typing
 
@@ -164,7 +165,7 @@ Pod::Elemental::Transformer::List - transform :list regions into =over/=back to 
 
 =head1 VERSION
 
-version 0.101610
+version 0.101620
 
 =head1 SYNOPSIS
 

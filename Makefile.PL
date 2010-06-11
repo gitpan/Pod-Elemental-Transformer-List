@@ -26,14 +26,12 @@ my %WriteMakefileArgs = (
   'NAME' => 'Pod::Elemental::Transformer::List',
   'PREREQ_PM' => {
     'Moose' => '0',
-    'Pod::Elemental' => '0.093280',
     'Pod::Elemental::Element::Pod5::Command' => '0',
-    'Pod::Elemental::Transformer' => '0',
+    'Pod::Elemental::Transformer' => '0.101620',
     'Pod::Elemental::Types' => '0',
-    'Test::Differences' => '0',
     'namespace::autoclean' => '0'
   },
-  'VERSION' => '0.101610',
+  'VERSION' => '0.101620',
   'test' => {
     'TESTS' => 't/*.t'
   }
