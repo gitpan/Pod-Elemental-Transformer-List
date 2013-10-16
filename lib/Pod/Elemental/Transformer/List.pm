@@ -1,6 +1,6 @@
 package Pod::Elemental::Transformer::List;
-BEGIN {
-  $Pod::Elemental::Transformer::List::VERSION = '0.101620';
+{
+  $Pod::Elemental::Transformer::List::VERSION = '0.101621';
 }
 use Moose;
 use Pod::Elemental::Transformer 0.101620;
@@ -26,7 +26,7 @@ sub transform_node {
   for my $i (reverse(0 .. $#{ $node->children })) {
     my $para = $node->children->[ $i ];
     next unless $self->__is_xformable($para);
-    my @replacements = $self->_expand_list_paras( $para->children );
+    my @replacements = $self->_expand_list_paras( $para );
     splice @{ $node->children }, $i, 1, @replacements;
   }
 }
@@ -39,7 +39,7 @@ sub __is_xformable {
 
   confess("list regions must be pod (=begin :" . $self->format_name . ")")
     unless $para->is_pod;
-  
+
   return 1;
 }
 
@@ -50,17 +50,17 @@ my %_TYPE = (
 );
 
 sub _expand_list_paras {
-  my ($self, $paras) = @_;
-  
+  my ($self, $parent) = @_;
+
   my @replacements;
 
   my $type;
   my $i = 1;
 
-  PARA: for my $para (@$paras) {
+  PARA: for my $para (@{ $parent->children }) {
     unless ($para->isa('Pod::Elemental::Element::Pod5::Ordinary')) {
       push @replacements, $self->__is_xformable($para)
-         ? $self->_expand_list_paras($para->children)
+         ? $self->_expand_list_paras($para)
          : $para;
 
       next PARA;
@@ -105,9 +105,11 @@ sub _expand_list_paras {
     }
   }
 
+  my $indentlevel = 4;
+  $indentlevel = $1 if $parent->content =~ /:over<(\d+)>/;
   unshift @replacements, Pod::Elemental::Element::Pod5::Command->new({
     command => 'over',
-    content => 4,
+    content => $indentlevel,
   });
 
   push @replacements, Pod::Elemental::Element::Pod5::Command->new({
@@ -126,7 +128,7 @@ sub __paras_for_num_marker {
       command => 'item',
       content => $i,
     }),
-    $rest, 
+    $rest,
   );
 }
 
@@ -150,13 +152,14 @@ sub __paras_for_bul_marker {
       command => 'item',
       content => '*',
     }),
-    $rest, 
+    $rest,
   );
 }
 
 1;
 
 __END__
+
 =pod
 
 =head1 NAME
@@ -165,7 +168,7 @@ Pod::Elemental::Transformer::List - transform :list regions into =over/=back to 
 
 =head1 VERSION
 
-version 0.101620
+version 0.101621
 
 =head1 SYNOPSIS
 
@@ -206,6 +209,11 @@ specification|perlpodspec> but boils down to this: "for" regions will only be
 able to contain list markers and paragraphs of text, while "begin and end"
 regions can contain arbitrary Pod paragraphs and nested list regions.
 
+All lists have a default C<indentlevel> value of 4.  Adding
+C<< :over<n> >> to a C<=begin :list> definition will result in that list
+having an C<indentlevel> of C<n> instead.  (This functionality is not
+available for lists defined with C<=for :list>.)
+
 Ordinary paragraphs in list regions are scanned for lines beginning with list
 item markers (see below).  If they're found, the list is broken into paragraphs
 and markers.  Here's a demonstrative example:
@@ -219,7 +227,7 @@ and markers.  Here's a demonstrative example:
   or maybe it's a golden
   drop of sun
 
-The above is equivalent to 
+The above is equivalent to
 
   =begin :list
 
@@ -252,6 +260,29 @@ It will be transformed into:
   or maybe it's a golden
   drop of sun
 
+Which renders as:
+
+=over 4
+
+=item *
+
+Doe
+
+a deer,
+a female deer
+
+=item *
+
+Ray
+
+a drop of golden sun
+or maybe it's a golden
+drop of sun
+
+=back
+
+I<rendering ends here>
+
 In other words: the B<C<*>> indicates a new bullet.  The rest of the line is
 made into one paragraph, which will become the text of the bullet point when
 rendered.  (Yeah, Pod is weird.)  All subsequent lines without markers will be
@@ -270,6 +301,26 @@ Here's a numbered list:
 
 The choice of number doesn't matter.  The generated Pod C<=item> commands will
 start with 1 and increase by 1 each time.
+
+This is rendered as:
+
+=over 4
+
+=item 1.
+
+bell
+
+=item 2.
+
+book
+
+=item 3.
+
+candle
+
+=back
+
+I<rendering ends here>
 
 Definition lists are unusual in that the text on the line after a item marker
 will be used as the bullet, rather than the next paragraph.  So this input:
@@ -298,6 +349,18 @@ Will become the following output Pod:
 
   =back
 
+Which is rendered as:
+
+=over 4
+
+=item benefits
+
+There are more benefits than can be listed here
+
+=back
+
+I<rendering ends here>
+
 If you want to nest lists, you have to make the outer list a begin/end region,
 like this:
 
@@ -323,14 +386,13 @@ The inner list, above, could have been written as a compact "for" region.
 
 =head1 AUTHOR
 
-  Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Ricardo SIGNES.
+This software is copyright (c) 2013 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
