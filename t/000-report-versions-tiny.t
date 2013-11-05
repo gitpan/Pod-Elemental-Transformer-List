@@ -49,9 +49,6 @@ sub pmver {
 }
 
 eval { $v .= pmver('ExtUtils::MakeMaker','6.30') };
-eval { $v .= pmver('File::Spec','any version') };
-eval { $v .= pmver('IO::Handle','any version') };
-eval { $v .= pmver('IPC::Open3','any version') };
 eval { $v .= pmver('Moose','any version') };
 eval { $v .= pmver('Pod::Elemental','any version') };
 eval { $v .= pmver('Pod::Elemental::Element::Pod5::Command','any version') };

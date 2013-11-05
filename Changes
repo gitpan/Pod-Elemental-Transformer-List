@@ -1,5 +1,9 @@
 Revision history for Pod-Elemental-Transformer-List
 
+0.102000  2013-11-05 17:37:21 America/New_York
+          allow bullet paragraphs to wrap if there's leading whitespace
+          (thanks, David Golden!)
+
 0.101621  2013-10-15 21:49:39 America/New_York
           allow :over<x> for custom =over indent level (thanks, Alex Peters!)
 
